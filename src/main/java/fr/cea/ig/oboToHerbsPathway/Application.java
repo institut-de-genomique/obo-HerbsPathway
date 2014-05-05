@@ -11,17 +11,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
 import com.lexicalscope.jewel.JewelRuntimeException;
 import com.lexicalscope.jewel.cli.Cli;
 import com.lexicalscope.jewel.cli.CliFactory;
 
 import fr.cea.ig.obo.Parser;
+import fr.cea.ig.obo.model.Relation;
 import fr.cea.ig.obo.model.Term;
 import fr.cea.ig.obo.model.TermRelations;
 import fr.cea.ig.obo.model.UCR;
 import fr.cea.ig.obo.model.Variant;
-import fr.cea.ig.obo.model.Relation;
 
 public final class Application {
 
