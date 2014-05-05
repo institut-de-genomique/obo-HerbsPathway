@@ -1,7 +1,7 @@
-obo-parser
+obo-HerbsPathway
 ==========
 
-A java parser for obo file format as provided by unipathway
+A java converter unipathway to Herbs
 
 
 Installation
@@ -9,9 +9,8 @@ Installation
 
 ```bash
 $ git clone https://github.com/institut-de-genomique/obo-parser.git
-$ cd obo-parser
+$ cd obo-HerbsPathway
 $ mvn install
-$ mvn test
 ```
 
 Usage
