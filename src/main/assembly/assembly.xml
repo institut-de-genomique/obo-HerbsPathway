@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+  <id>bin</id>
+  <!-- Generates a zip package containing the needed files -->
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <!-- Adds dependencies to zip package under lib directory -->
+  <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+      <outputDirectory>bin</outputDirectory>
+
+      <includes>
+        <include>fr.cea.labgem:oboToHerbsPathway</include>
+      </includes>
+
+      <dependencySet>
+        <useProjectArtifact>false</useProjectArtifact>
+        <useTransitiveDependencies>true</useTransitiveDependencies>
+        <unpack>false</unpack>
+        <scope>runtime</scope>
+        <fileMode>0644</fileMode>
+        <directoryMode>0755</directoryMode>
+        <outputDirectory>lib</outputDirectory>
+
+        <includes>
+          <include>fr.cea.labgem:obo-parser</include>
+          <include>com.lexicalscope.jewelcli:jewelcli</include>
+          <include>junit:junit</include>
+        </includes>
+
+      </dependencySet>
+    </dependencySet>
+  </dependencySets>
+
+</assembly>
