@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.cea.ig</groupId>
   <artifactId>oboToHerbsPathway</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>oboToHerbsPathway</name>
   <description>convert obo file to Herbs pathway file </description>
 
