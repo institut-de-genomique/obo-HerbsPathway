@@ -20,6 +20,7 @@ import fr.cea.ig.obo.model.Relation;
 import fr.cea.ig.obo.model.Term;
 import fr.cea.ig.obo.model.TermRelations;
 import fr.cea.ig.obo.model.UCR;
+import fr.cea.ig.obo.model.UER;
 import fr.cea.ig.obo.model.Variant;
 
 public final class Application {
@@ -46,39 +47,41 @@ public final class Application {
     }
 
 
-    private static void pathwayWriter(  BufferedWriter writer, final String process, Term term ){
+    private static void pathwayWriter(  BufferedWriter writer, final String process, Term term, final Class<? extends Term> untilItem ){
             Integer         stepNum = 0;
             List<Variant>   variants= new ArrayList<Variant>();
             Variant.getVariant( ((TermRelations)term).getChilds() , variants);
-            if(  variants.size() != 0){
-                try {
-                    final String    logic   = ( variants.size() > 1 )? "or" : "and";
-                    writer.write("(process define "+ process +" -> "+logic+" " + variantsToPathwayClips(variants, process) + ")\n" ) ;
-                    processWriter( writer, process, variants );
-                    for( Variant variant : variants ){
-                        
-                        for( Term child : variant)
-                            pathwayWriter(  writer, child.getId().replace("UPa:", ""), child );
-                        
-                        stepNum++;
-                    }
-                    
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else if( term instanceof UCR ){
+            if( ! untilItem.isInstance(term) ){
+                if(  variants.size() != 0){
                     try {
-                        Set<Relation>      partOf = ((UCR)term).getRelation("has_input_compound");
-                        String[]           ids    = new String[ partOf.size() ];
-                        Iterator<Relation> iter    = partOf.iterator();
-                        for( int i = 0; i < ids.length ; i++ ){
-                            ids[ i ] = iter.next().getIdLeft().replace( "UPa:", "" );
+                        final String    logic   = ( variants.size() > 1 )? "or" : "and";
+                        writer.write("(process define "+ process +" -> "+logic+" " + variantsToPathwayClips(variants, process) + ")\n" ) ;
+                        processWriter( writer, process, variants );
+                        for( Variant variant : variants ){
+                            
+                            for( Term child : variant)
+                                pathwayWriter(  writer, child.getId().replace("UPa:", ""), child, untilItem );
+                            
+                            stepNum++;
                         }
-                        writer.write( "(process define "+ process + "  -> and " + Tools.join( ids , " ") + ")\n" );
+                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+                else if( term instanceof UCR ){
+                        try {
+                            Set<Relation>      partOf = ((UCR)term).getRelation("has_input_compound");
+                            String[]           ids    = new String[ partOf.size() ];
+                            Iterator<Relation> iter    = partOf.iterator();
+                            for( int i = 0; i < ids.length ; i++ ){
+                                ids[ i ] = iter.next().getIdLeft().replace( "UPa:", "" );
+                            }
+                            writer.write( "(process define "+ process + "  -> and " + Tools.join( ids , " ") + ")\n" );
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                }
             }
     }
 
@@ -109,6 +112,7 @@ public final class Application {
                                                         new FileOutputStream(params.getHerbsFile() ),
                                                         Charset.forName("US-ASCII") ), 4 * 4096 );
         
+        final String pathwayName = params.getHerbsFile().substring(0, params.getHerbsFile().lastIndexOf('.'));
         
         writer.write(
                         ";;;; -------------------------------------------------------\n"    +
@@ -117,9 +121,10 @@ public final class Application {
                         ";;; @file: " + params.getHerbsFile() + "\n"                        +
                         ";;; -------------------------------------------------------\n"     +
                         ";;;\n"                                                             +
-                        "(process declare "+ pathway +" present in ALL)\n"                  );
-        
-        pathwayWriter(  writer, pathway, root );
+                        "(process declare "+ pathwayName +" present in ALL)\n"              +
+                        "(process define "+ pathwayName +" -> and "+ pathway +")\n"                  );
+
+        pathwayWriter(  writer, pathway, root, UER.class );
         
         writer.close();
     }
