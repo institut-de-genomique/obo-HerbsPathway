@@ -50,4 +50,4 @@ Travis Log: [here](https://travis-ci.org/institut-de-genomique/obo-HerbsPathway)
 LICENSE
 =======
 
-CeCILL-C
+Open source approved by the [Free Software Foundation](https://www.fsf.org/): [CeCILL-C](LICENSE)
